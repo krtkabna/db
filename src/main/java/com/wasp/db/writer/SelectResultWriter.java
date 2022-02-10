@@ -10,7 +10,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class SelectResultWriter {
-    private static final String RESOURCES_PATH = "src/resources/results/";
+    private static final String RESOURCES_PATH = "src/main/resources/results/";
     private static final File RESOURCES_DIR = new File(RESOURCES_PATH);
 
     public void write(ResultSet resultSet) {
