@@ -1,11 +1,12 @@
 package com.wasp.db.writer;
 
+import com.wasp.db.model.Command;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class NonSelectResultWriter {
-    public void write(String query, int rows) throws SQLException {
-        System.out.println("Query:        " + query);
-        System.out.println("Rows changed: " + rows);
+
+    public void write(Command command, int rows) {
+        String actionPerformed = command.name().toLowerCase() + "d";
+        System.out.printf("Rows %s: %d%n", actionPerformed, rows);
     }
 }

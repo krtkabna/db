@@ -4,23 +4,14 @@ import com.wasp.db.exception.InvalidStatementException;
 import java.util.Arrays;
 
 public enum Command {
-    SELECT("SELECT"),
-    INSERT("INSERT"),
-    UPDATE("UPDATE"),
-    DELETE("DELETE");
+    SELECT, INSERT, UPDATE, DELETE;
 
-    private String name;
-
-    Command(String name) {
-        this.name = name;
-    }
-
-    public static Command getCommandByName(String name) {
+    public static Command getCommandByName(String query) {
         return Arrays.stream(values())
-            .filter(statement -> statement.name.equals(name))
+            .filter(statement -> query.toUpperCase().startsWith(statement.name()))
             .findFirst()
             .orElseThrow(
-                () -> new InvalidStatementException("No valid statement begins with " + name.toUpperCase()));
+                () -> new InvalidStatementException("Invalid statement: " + query.toUpperCase()));
     }
 
 }

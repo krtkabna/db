@@ -2,6 +2,7 @@ package com.wasp.db.writer;
 
 import lib.DBTablePrinter;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -9,8 +10,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class SelectResultWriter {
-    //should only be one instance for it to work
-    private int index = 0;
+    private static final String RESOURCES_PATH = "src/resources/results/";
+    private static final File RESOURCES_DIR = new File(RESOURCES_PATH);
 
     public void write(ResultSet resultSet) {
         writeToConsole(resultSet);
@@ -22,8 +23,9 @@ public class SelectResultWriter {
     }
 
     private void writeToHtml(ResultSet resultSet) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
-                String.format("result%s.html", index++)))) {
+        File result = new File(RESOURCES_DIR, "result" + getIndex() + ".html");
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+            new FileWriter(result))) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int count = metaData.getColumnCount();
 
@@ -33,14 +35,12 @@ public class SelectResultWriter {
 
             for (int i = 1; i <= count; i++) {
                 bufferedWriter.write("<th>");
-                bufferedWriter.write(metaData.getColumnLabel(i));
+                bufferedWriter.write(metaData.getColumnLabel(i).toUpperCase());
             }
-
             bufferedWriter.write("</tr>");
 
             while (resultSet.next()) {
                 bufferedWriter.write("<tr>");
-
                 for (int i = 1; i <= count; i++) {
                     bufferedWriter.write("<td>");
                     bufferedWriter.write(resultSet.getString(i));
@@ -54,5 +54,13 @@ public class SelectResultWriter {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private int getIndex() {
+        if (!RESOURCES_DIR.exists()) {
+            RESOURCES_DIR.mkdir();
+        }
+        File[] files = RESOURCES_DIR.listFiles();
+        return files.length;
     }
 }
