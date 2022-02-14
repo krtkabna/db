@@ -19,17 +19,5 @@
             <artifactId>postgresql</artifactId>
             <version>42.3.2</version>
         </dependency>
-        <dependency>
-            <groupId>io.bretty</groupId>
-            <artifactId>console-table-builder</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jakewharton.fliptables</groupId>
-            <artifactId>fliptables</artifactId>
-            <version>1.1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/fliptables-1.1.0.jar</systemPath>
-        </dependency>
     </dependencies>
 </project>

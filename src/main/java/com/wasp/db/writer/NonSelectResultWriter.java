@@ -1,7 +1,6 @@
 package com.wasp.db.writer;
 
 import com.wasp.db.model.Command;
-import java.sql.SQLException;
 
 public class NonSelectResultWriter {
 

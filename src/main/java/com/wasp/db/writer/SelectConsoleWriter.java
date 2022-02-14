@@ -46,6 +46,6 @@ public class SelectConsoleWriter {
     }
 
     private void printLastLine(String rowSeparator) {
-        System.out.println(rowSeparator.replace('╋', '┻').replace('┣', '┗').replace('┫','┛'));
+        System.out.println(rowSeparator.replace('╋', '┻').replace('┣', '┗').replace('┫', '┛'));
     }
 }

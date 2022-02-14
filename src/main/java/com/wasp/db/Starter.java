@@ -1,6 +1,6 @@
 package com.wasp.db;
 
-import com.wasp.db.queryService.QueryHandler;
+import com.wasp.db.service.QueryHandler;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,7 +16,6 @@ public class Starter {
                 System.out.println("Enter your query: ");
                 String query;
                 while (!(query = scanner.nextLine()).isEmpty()) {
-                    //todo fix creating writers every time
                     QueryHandler queryHandler = new QueryHandler(statement, query);
                     queryHandler.handle();
                 }

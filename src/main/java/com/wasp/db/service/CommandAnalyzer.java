@@ -1,4 +1,4 @@
-package com.wasp.db.queryService;
+package com.wasp.db.service;
 
 import com.wasp.db.model.Command;
 
