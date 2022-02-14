@@ -2,14 +2,17 @@ package com.wasp.db.queryService;
 
 import com.wasp.db.exception.CouldNotExecuteStatementException;
 import com.wasp.db.model.Command;
+import com.wasp.db.model.Table;
 import com.wasp.db.writer.NonSelectResultWriter;
-import com.wasp.db.writer.SelectResultWriter;
+import com.wasp.db.writer.SelectConsoleWriter;
+import com.wasp.db.writer.SelectReportWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class QueryHandler {
-    private static final SelectResultWriter SELECT_RESULT_WRITER = new SelectResultWriter();
+    private static final SelectReportWriter SELECT_REPORT_WRITER = new SelectReportWriter();
+    private static final SelectConsoleWriter SELECT_CONSOLE_WRITER = new SelectConsoleWriter();
     private static final NonSelectResultWriter NON_SELECT_RESULT_WRITER = new NonSelectResultWriter();
     private final Statement statement;
     private final String query;
@@ -31,9 +34,11 @@ public class QueryHandler {
     private void handleSelect() {
         try {
             ResultSet resultSet = statement.executeQuery(query);
-            SELECT_RESULT_WRITER.write(resultSet);
+            Table table = new Table(resultSet);
+            SELECT_REPORT_WRITER.writeToHtml(table);
+            SELECT_CONSOLE_WRITER.print(table);
         } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException("SELECT");
+            throw new CouldNotExecuteStatementException("SELECT", e);
         }
     }
 
@@ -42,7 +47,7 @@ public class QueryHandler {
             int rows = statement.executeUpdate(query);
             NON_SELECT_RESULT_WRITER.write(command, rows);
         } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException(command.name());
+            throw new CouldNotExecuteStatementException(command.name(), e);
         }
     }
 }
