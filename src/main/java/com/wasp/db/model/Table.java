@@ -7,20 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
+    private String name;
     private List<String> headers;
     private List<Row> rows;
 
     public Table(ResultSet resultSet) throws SQLException {
         headers = new ArrayList<>();
-        rows = new ArrayList<>();
-
-        ResultSetMetaData metaData = resultSet.getMetaData();
-//        for (int i = 1; i <= metaData.getColumnCount(); i++) {
-//            int columnDisplaySize = metaData.getColumnDisplaySize(i);
-//            headers.add(String.format("%" + columnDisplaySize + "s", metaData.getColumnName(i)));
-//        }
         fillList(resultSet, headers, true);
 
+        rows = new ArrayList<>();
         while (resultSet.next()) {
             Row row = new Row();
             List<String> cells = row.getCells();
@@ -37,8 +32,15 @@ public class Table {
         return rows;
     }
 
+    public String getName() {
+        return name;
+    }
+
     private void fillList(ResultSet resultSet, List<String> list, boolean isHeader) throws SQLException {
         ResultSetMetaData metaData = resultSet.getMetaData();
+        if (name == null) {
+            name = metaData.getTableName(1);
+        }
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             int columnDisplaySize = metaData.getColumnDisplaySize(i);
             String value;
@@ -47,7 +49,7 @@ public class Table {
             } else {
                 value = resultSet.getString(i);
             }
-            list.add(String.format("%" + columnDisplaySize + "s", value));
+            list.add(String.format("%-" + columnDisplaySize + "s", value));
         }
     }
 }

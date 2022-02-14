@@ -38,7 +38,7 @@ public class QueryHandler {
             SELECT_REPORT_WRITER.writeToHtml(table);
             SELECT_CONSOLE_WRITER.print(table);
         } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException("SELECT", e);
+            throw new CouldNotExecuteStatementException(query, e);
         }
     }
 
@@ -47,7 +47,7 @@ public class QueryHandler {
             int rows = statement.executeUpdate(query);
             NON_SELECT_RESULT_WRITER.write(command, rows);
         } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException(command.name(), e);
+            throw new CouldNotExecuteStatementException(query, e);
         }
     }
 }
