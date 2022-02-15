@@ -35,6 +35,7 @@ public class SelectReportWriter {
             }
 
             bufferedWriter.write("</table></html>");
+            System.out.println("Finished writing to file: " + result.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }

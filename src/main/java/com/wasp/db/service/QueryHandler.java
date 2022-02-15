@@ -1,6 +1,6 @@
 package com.wasp.db.service;
 
-import com.wasp.db.exception.CouldNotExecuteStatementException;
+import com.wasp.db.exception.InvalidStatementException;
 import com.wasp.db.model.Command;
 import com.wasp.db.model.Table;
 import com.wasp.db.writer.NonSelectResultWriter;
@@ -23,31 +23,29 @@ public class QueryHandler {
     }
 
     public void handle() {
-        Command command = CommandAnalyzer.analyze(query);
-        if (command.equals(Command.SELECT)) {
-            handleSelect();
-        } else {
-            handleNonSelect(command);
+        try {
+            Command command = Command.getCommandByName(query);
+            if (command.equals(Command.SELECT)) {
+                handleSelect();
+            } else {
+                handleNonSelect(command);
+            }
+        } catch (InvalidStatementException e) {
+            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            System.out.println(String.format("Could not execute query: %s%nCause: %s", query, e.getMessage()) + query);
         }
     }
 
-    private void handleSelect() {
-        try {
-            ResultSet resultSet = statement.executeQuery(query);
-            Table table = new Table(resultSet);
-            SELECT_REPORT_WRITER.writeToHtml(table);
-            SELECT_CONSOLE_WRITER.print(table);
-        } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException(query, e);
-        }
+    private void handleSelect() throws SQLException {
+        ResultSet resultSet = statement.executeQuery(query);
+        Table table = TableMapper.mapToTable(resultSet);
+        SELECT_REPORT_WRITER.writeToHtml(table);
+        SELECT_CONSOLE_WRITER.print(table);
     }
 
-    private void handleNonSelect(Command command) {
-        try {
-            int rows = statement.executeUpdate(query);
-            NON_SELECT_RESULT_WRITER.write(command, rows);
-        } catch (SQLException e) {
-            throw new CouldNotExecuteStatementException(query, e);
-        }
+    private void handleNonSelect(Command command) throws SQLException {
+        int rows = statement.executeUpdate(query);
+        NON_SELECT_RESULT_WRITER.write(command, rows);
     }
 }

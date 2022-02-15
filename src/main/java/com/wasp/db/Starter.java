@@ -10,12 +10,12 @@ public class Starter {
     public static void main(String[] args) throws SQLException {
 
         try (Connection connection = ConnectionUtil.getConnection();
-             Statement statement = connection.createStatement();
              Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 System.out.println("Enter your query: ");
                 String query;
-                while (!(query = scanner.nextLine()).isEmpty()) {
+                if (!(query = scanner.nextLine()).isEmpty()) {
+                    Statement statement = connection.createStatement();
                     QueryHandler queryHandler = new QueryHandler(statement, query);
                     queryHandler.handle();
                 }

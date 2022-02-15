@@ -21,7 +21,7 @@ public class SelectConsoleWriter {
 
         for (int i = 0; i < rows.size(); i++) {
             Row row = rows.get(i);
-            for (String cell : row.getCells()) {
+            for (Object cell : row.getCells()) {
                 System.out.print("┃" + cell);
             }
             System.out.print("┃\n");
@@ -46,6 +46,9 @@ public class SelectConsoleWriter {
     }
 
     private void printLastLine(String rowSeparator) {
-        System.out.println(rowSeparator.replace('╋', '┻').replace('┣', '┗').replace('┫', '┛'));
+        System.out.println(rowSeparator
+            .replace('╋', '┻')
+            .replace('┣', '┗')
+            .replace('┫', '┛'));
     }
 }
