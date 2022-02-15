@@ -14,7 +14,7 @@ public class SelectReportWriter {
     private static final File RESOURCES_DIR = new File(RESOURCES_PATH);
 
     public void writeToHtml(Table table) {
-        File result = new File(RESOURCES_DIR, "result" + new Date().getTime() + ".html");
+        File result = getResultFile();
         System.out.println("Started writing to file: " + result.getName());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(result))) {
             List<String> headers = table.getHeaders();
@@ -28,6 +28,7 @@ public class SelectReportWriter {
             bufferedWriter.write("<tr>");
 
             for (Row row : rows) {
+
                 for (int i = 0; i < headers.size(); i++) {
                     bufferedWriter.write("<td>" + row.getCells().get(i) + "</td>");
                 }
@@ -39,5 +40,12 @@ public class SelectReportWriter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private File getResultFile() {
+        if (!RESOURCES_DIR.isDirectory()) {
+            RESOURCES_DIR.mkdir();
+        }
+        return new File(RESOURCES_DIR, "result" + new Date().getTime() + ".html");
     }
 }
