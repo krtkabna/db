@@ -32,20 +32,26 @@ public class QueryHandler {
             }
         } catch (InvalidStatementException e) {
             System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            System.out.println(String.format("Could not execute query: %s%nCause: %s", query, e.getMessage()) + query);
         }
     }
 
-    private void handleSelect() throws SQLException {
-        ResultSet resultSet = statement.executeQuery(query);
-        Table table = TableMapper.mapToTable(resultSet);
-        SELECT_REPORT_WRITER.writeToHtml(table);
-        SELECT_CONSOLE_WRITER.print(table);
+    private void handleSelect() throws InvalidStatementException {
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            Table table = TableMapper.mapToTable(resultSet);
+            SELECT_REPORT_WRITER.writeToHtml(table);
+            SELECT_CONSOLE_WRITER.print(table);
+        } catch (SQLException e) {
+            throw new InvalidStatementException(query, e);
+        }
     }
 
-    private void handleNonSelect(Command command) throws SQLException {
-        int rows = statement.executeUpdate(query);
-        NON_SELECT_RESULT_WRITER.write(command, rows);
+    private void handleNonSelect(Command command) throws InvalidStatementException {
+        try {
+            int rows = statement.executeUpdate(query);
+            NON_SELECT_RESULT_WRITER.write(command, rows);
+        } catch (SQLException e) {
+            throw new InvalidStatementException(query, e);
+        }
     }
 }
